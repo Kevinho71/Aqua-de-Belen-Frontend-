@@ -99,7 +99,7 @@ export const Compras = () => {
     const loadAllProductStocks = async () => {
       if (!productos) return;
       
-      const stocksPromises = productos.map(async (producto) => {
+      const stocksPromises = productos.map(async (producto: any) => {
         const productoId = (producto.productoId || producto.id)?.toString() || '';
         if (!productoId) return null;
         
@@ -239,7 +239,7 @@ export const Compras = () => {
               className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">Todos los proveedores</option>
-              {proveedores?.map((proveedor) => (
+              {proveedores?.map((proveedor: any) => (
                 <option key={proveedor.id} value={proveedor.id}>
                   {proveedor.nombre}
                 </option>
@@ -352,7 +352,7 @@ export const Compras = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Seleccione un proveedor...</option>
-                    {proveedores?.map((p, idx) => (
+                    {proveedores?.map((p: any, idx: number) => (
                       <option key={p.id || idx} value={p.id}>{p.nombre} - {p.nit}</option>
                     ))}
                   </select>
@@ -396,7 +396,7 @@ export const Compras = () => {
                               className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                             >
                               <option value="">Seleccionar...</option>
-                              {productos?.map((p, idx) => {
+                              {productos?.map((p: any, idx: number) => {
                                 const productoId = (p.productoId || p.id)?.toString() || '';
                                 const stock = productoStocks[productoId];
                                 return (

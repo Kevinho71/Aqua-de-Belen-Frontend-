@@ -104,7 +104,7 @@ export const Ventas = () => {
     const loadAllProductStocks = async () => {
       if (!productos) return;
       
-      const stocksPromises = productos.map(async (producto) => {
+      const stocksPromises = productos.map(async (producto: any) => {
         const productoId = (producto.productoId || producto.id)?.toString() || '';
         if (!productoId) return null;
         
@@ -227,7 +227,7 @@ export const Ventas = () => {
   // Calcular total estimado (opcional, solo visual)
   const detalles = watch('detalles');
   const totalEstimado = detalles?.reduce((acc, curr) => {
-    const prod = productos?.find(p => (p.productoId || p.id) == curr.productoId);
+    const prod = productos?.find((p: any) => (p.productoId || p.id) == curr.productoId);
     const precio = prod ? parseFloat(prod.precio.replace(' Bs', '').trim()) : 0;
     const cantidad = Number(curr.cantidad) || 0;
     const descuento = Number(curr.descuento) || 0;
@@ -258,7 +258,7 @@ export const Ventas = () => {
               className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">Todos los clientes</option>
-              {clientes?.map((cliente) => (
+              {clientes?.map((cliente: any) => (
                 <option key={cliente.id} value={cliente.id}>
                   {cliente.nombre} {cliente.apellido}
                 </option>
@@ -375,7 +375,7 @@ export const Ventas = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Seleccione un cliente...</option>
-                    {clientes?.map(c => (
+                    {clientes?.map((c: any) => (
                       <option key={c.id} value={c.id}>{c.nombreCompleto || `${c.nombre} ${c.apellido}`}</option>
                     ))}
                   </select>
@@ -442,7 +442,7 @@ export const Ventas = () => {
                             className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                           >
                             <option value="">Seleccionar...</option>
-                            {productos?.map((p, idx) => {
+                              {productos?.map((p: any, idx: number) => {
                               const productoId = (p.productoId || p.id)?.toString() || '';
                               const stock = productoStocks[productoId];
                               return (
