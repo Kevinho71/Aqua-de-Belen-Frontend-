@@ -1,0 +1,2517 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "API REST - Aqua de Belén",
+    "description": "Sistema de gestión de inventario y ventas para perfumería Aqua de Belén",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Precios Históricos",
+      "description": "Gestión y consulta del historial de precios de productos"
+    },
+    {
+      "name": "Productos",
+      "description": "Endpoints para gestión de productos del inventario"
+    }
+  ],
+  "paths": {
+    "/api/v1/ventas/{id}": {
+      "get": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "buscar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VentaViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "editar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VentaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VentaViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "borrar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/proveedor/{id}": {
+      "get": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "operationId": "buscar_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "operationId": "editar_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "operationId": "borrar_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{id}": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Buscar producto por ID",
+        "description": "Obtiene los detalles de un producto específico mediante su ID",
+        "operationId": "buscar_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto a buscar",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Actualizar producto existente",
+        "description": "Modifica los datos de un producto existente por su ID",
+        "operationId": "editar_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Eliminar producto",
+        "description": "Elimina un producto del inventario por su ID",
+        "operationId": "eliminar",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto a eliminar",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto eliminado exitosamente"
+          }
+        }
+      }
+    },
+    "/api/v1/compras/{id}": {
+      "get": {
+        "tags": [
+          "compras-controller"
+        ],
+        "operationId": "buscar_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "compras-controller"
+        ],
+        "operationId": "editar_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompraDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "compras-controller"
+        ],
+        "operationId": "borrar_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/clientes/{id}": {
+      "get": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "buscar_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "editar_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "borrar_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/ventas": {
+      "get": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "listar",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListVentaViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "registrar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VentaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VentaViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proveedor": {
+      "get": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "operationId": "listar_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProveedorViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "operationId": "registrar_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProveedorDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProveedorViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proveedor/buscar": {
+      "get": {
+        "tags": [
+          "proveedor-controller"
+        ],
+        "summary": "Buscar proveedores con filtros",
+        "description": "Busca proveedores por nombre y/o NIT.",
+        "operationId": "buscarProveedoresPorFiltros",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "description": "Nombre del proveedor",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nit",
+            "in": "query",
+            "description": "NIT del proveedor",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProveedorViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar todos los productos",
+        "description": "Obtiene la lista completa de productos registrados en el inventario",
+        "operationId": "listar_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListProductoViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Crear nuevo producto",
+        "description": "Registra un nuevo producto en el inventario",
+        "operationId": "registrar_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductoDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Producto creado exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/compras": {
+      "get": {
+        "tags": [
+          "compras-controller"
+        ],
+        "operationId": "listar_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListaCompraViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "compras-controller"
+        ],
+        "operationId": "registrar_3",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompraDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clientes": {
+      "get": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "listar_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListClienteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "registrar_4",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClienteDTORequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClienteViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{id}/precio": {
+      "patch": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Actualizar precio de producto",
+        "description": "Actualiza únicamente el precio de venta de un producto. Crea un nuevo registro en el historial de precios.",
+        "operationId": "actualizarPrecio",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPrecioRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Precio actualizado exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ventas/metodos-pago": {
+      "get": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "operationId": "listarMetodosPago",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetodoDePagoViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sublotes": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "operationId": "listar_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListSubloteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sublotes/{id}": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "operationId": "buscar_5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubloteViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sublotes/proximos-vencer": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "operationId": "listarProximosAVencer",
+        "parameters": [
+          {
+            "name": "dias",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListSubloteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sublotes/disponibles": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "operationId": "listarDisponibles",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListSubloteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/tipos": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar tipos de producto",
+        "description": "Obtiene la lista de todos los tipos de producto disponibles.",
+        "operationId": "listarTiposProducto",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TipoProducto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ventas/buscar": {
+      "get": {
+        "tags": [
+          "ventas-controller"
+        ],
+        "summary": "Buscar ventas con filtros",
+        "description": "Busca ventas por cliente y/o rango de fechas.",
+        "operationId": "buscarVentasPorFiltros",
+        "parameters": [
+          {
+            "name": "clienteId",
+            "in": "query",
+            "description": "ID del cliente",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fechaInicio",
+            "in": "query",
+            "description": "Fecha de inicio (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "query",
+            "description": "Fecha de fin (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListVentaViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/compras/buscar": {
+      "get": {
+        "tags": [
+          "compras-controller"
+        ],
+        "summary": "Buscar compras con filtros",
+        "description": "Busca compras por proveedor y/o rango de fechas.",
+        "operationId": "buscarComprasPorFiltros",
+        "parameters": [
+          {
+            "name": "proveedorId",
+            "in": "query",
+            "description": "ID del proveedor",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fechaInicio",
+            "in": "query",
+            "description": "Fecha de inicio (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "query",
+            "description": "Fecha de fin (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListaCompraViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lotes/buscar": {
+      "get": {
+        "tags": [
+          "lote-controller"
+        ],
+        "summary": "Buscar lotes con filtros",
+        "description": "Busca lotes por compra y/o rango de fechas.",
+        "operationId": "buscarLotesPorFiltros",
+        "parameters": [
+          {
+            "name": "compraId",
+            "in": "query",
+            "description": "ID de la compra",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "fechaInicio",
+            "in": "query",
+            "description": "Fecha de inicio (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "query",
+            "description": "Fecha de fin (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListLoteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sublotes/buscar": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "summary": "Buscar sublotes con filtros",
+        "description": "Busca sublotes por producto y/o estado.",
+        "operationId": "buscarSublotesPorFiltros",
+        "parameters": [
+          {
+            "name": "productoId",
+            "in": "query",
+            "description": "ID del producto",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "estado",
+            "in": "query",
+            "description": "Estado del sublote (DISPONIBLE, AGOTADO, POCO_CANTIDAD, RETIRADO)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListSubloteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/movimientos/buscar": {
+      "get": {
+        "tags": [
+          "movimiento-controller"
+        ],
+        "summary": "Buscar movimientos con filtros",
+        "description": "Busca movimientos por tipo, rango de fechas y/o sublote.",
+        "operationId": "buscarMovimientosPorFiltros",
+        "parameters": [
+          {
+            "name": "tipo",
+            "in": "query",
+            "description": "Tipo de movimiento",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fechaInicio",
+            "in": "query",
+            "description": "Fecha de inicio (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fechaFin",
+            "in": "query",
+            "description": "Fecha de fin (YYYY-MM-DD)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subloteId",
+            "in": "query",
+            "description": "ID del sublote",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListMovimientoViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{productoId}/sublotes": {
+      "get": {
+        "tags": [
+          "sublote-controller"
+        ],
+        "summary": "Listar sublotes por producto",
+        "description": "Obtiene todos los sublotes asociados a un producto específico.",
+        "operationId": "listarSublotesPorProducto",
+        "parameters": [
+          {
+            "name": "productoId",
+            "in": "path",
+            "description": "ID del producto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListSubloteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+      "get": {
+        "tags": [
+          "Precios Históricos"
+        ],
+        "summary": "Obtener historial de precios de un producto",
+        "description": "Obtiene todos los cambios de precio de un producto específico, ordenados por fecha (más reciente primero)",
+        "operationId": "listarPorProducto",
+        "parameters": [
+          {
+            "name": "productoId",
+            "in": "path",
+            "description": "ID del producto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Historial de precios del producto obtenido exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrecioHistoricoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{productoId}/precio-actual": {
+      "get": {
+        "tags": [
+          "Precios Históricos"
+        ],
+        "summary": "Obtener precio actual de un producto",
+        "description": "Obtiene el precio de venta más reciente (vigente) de un producto específico",
+        "operationId": "obtenerPrecioActual",
+        "parameters": [
+          {
+            "name": "productoId",
+            "in": "path",
+            "description": "ID del producto",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Precio actual obtenido exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrecioHistoricoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{id}/stock-total": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Obtener stock total de un producto",
+        "description": "Devuelve la cantidad total disponible de un producto específico sumando todos sus sublotes",
+        "operationId": "obtenerStockTotalProducto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto a consultar",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stock total del producto obtenido",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductoStockTotalViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/{id}/exists": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Verificar existencia de producto",
+        "description": "Verifica si existe un producto con el ID especificado",
+        "operationId": "existeProducto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID del producto a verificar",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "true si existe, false si no existe",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/stock-total": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Listar stock total por producto",
+        "description": "Devuelve la lista de productos con la cantidad total disponible sumando todos sus sublotes",
+        "operationId": "obtenerStockTotalProductos",
+        "responses": {
+          "200": {
+            "description": "Stock total obtenido",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductoStockTotalViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/count": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Contar productos",
+        "description": "Obtiene el número total de productos registrados en el inventario",
+        "operationId": "contarProductos",
+        "responses": {
+          "200": {
+            "description": "Cantidad de productos obtenida",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/productos/buscar": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Buscar productos con filtros",
+        "description": "Busca productos por nombre (parcial) y/o tipo de producto. Todos los parámetros son opcionales.",
+        "operationId": "buscarPorNombre",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "description": "Nombre del producto (búsqueda parcial, case-insensitive)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tipoProductoId",
+            "in": "query",
+            "description": "ID del tipo de producto",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListProductoViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/precios-historicos": {
+      "get": {
+        "tags": [
+          "Precios Históricos"
+        ],
+        "summary": "Listar todos los precios históricos",
+        "description": "Obtiene el historial completo de todos los cambios de precio de todos los productos, ordenados por fecha (más reciente primero)",
+        "operationId": "listarTodos",
+        "responses": {
+          "200": {
+            "description": "Lista de precios históricos obtenida exitosamente",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PrecioHistoricoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/movimientos": {
+      "get": {
+        "tags": [
+          "movimiento-controller"
+        ],
+        "operationId": "listar_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListMovimientoViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/movimientos/{id}": {
+      "get": {
+        "tags": [
+          "movimiento-controller"
+        ],
+        "operationId": "buscar_6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovimientoViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lotes": {
+      "get": {
+        "tags": [
+          "lote-controller"
+        ],
+        "operationId": "listar_7",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListLoteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lotes/{id}": {
+      "get": {
+        "tags": [
+          "lote-controller"
+        ],
+        "operationId": "buscar_7",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoteViewModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/clientes/buscar": {
+      "get": {
+        "tags": [
+          "cliente-controller"
+        ],
+        "operationId": "buscarPorFiltros",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "apellido",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nitCi",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListClienteViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DetalleVentaRequest": {
+        "type": "object",
+        "properties": {
+          "productoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidad": {
+            "type": "number",
+            "format": "double",
+            "minimum": 1
+          },
+          "descuento": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "cantidad",
+          "descuento",
+          "productoId"
+        ]
+      },
+      "VentaRequest": {
+        "type": "object",
+        "properties": {
+          "clienteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "metodoDePagoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conFactura": {
+            "type": "boolean"
+          },
+          "detalles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetalleVentaRequest"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "clienteId",
+          "detalles",
+          "metodoDePagoId"
+        ]
+      },
+      "DetalleVentaViewModel": {
+        "type": "object",
+        "properties": {
+          "idDetalle": {
+            "type": "string"
+          },
+          "producto": {
+            "type": "string"
+          },
+          "costoUnitario": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "descuento": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "string"
+          }
+        }
+      },
+      "VentaViewModel": {
+        "type": "object",
+        "properties": {
+          "getventaId": {
+            "type": "string"
+          },
+          "cliente": {
+            "type": "string"
+          },
+          "totalBruto": {
+            "type": "string"
+          },
+          "getdescuentoTotal": {
+            "type": "string"
+          },
+          "totalNeto": {
+            "type": "string"
+          },
+          "conFactura": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "detalles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetalleVentaViewModel"
+            }
+          }
+        }
+      },
+      "ProveedorDTORequest": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "correo": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "nit": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProveedorViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "correo": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "nit": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "zona": {
+            "type": "string"
+          },
+          "ubicacion": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductoDTORequest": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "tipoProductoId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProductoViewModel": {
+        "type": "object",
+        "properties": {
+          "productoId": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "precio": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "tipoProducto": {
+            "type": "string"
+          },
+          "tipoProductoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descontinuado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CompraDTORequest": {
+        "type": "object",
+        "properties": {
+          "proveedorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detalles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetalleCompraDTORequest"
+            }
+          }
+        }
+      },
+      "DetalleCompraDTORequest": {
+        "type": "object",
+        "properties": {
+          "productoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "costoUnitario": {
+            "type": "number",
+            "format": "double"
+          },
+          "cantidad": {
+            "type": "number",
+            "format": "double"
+          },
+          "descuento": {
+            "type": "number",
+            "format": "double"
+          },
+          "vencimiento": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "CompraViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "costoBruto": {
+            "type": "string"
+          },
+          "costoNeto": {
+            "type": "string"
+          },
+          "descuentoTotal": {
+            "type": "string"
+          },
+          "loteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proveedor": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "detalles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetalleCompraViewModel"
+            }
+          }
+        }
+      },
+      "DetalleCompraViewModel": {
+        "type": "object",
+        "properties": {
+          "compraId": {
+            "type": "string"
+          },
+          "producto": {
+            "type": "string"
+          },
+          "tipoProducto": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "costoUnitario": {
+            "type": "string"
+          },
+          "descuento": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "string"
+          }
+        }
+      },
+      "ClienteDTORequest": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apellido": {
+            "type": "string",
+            "minLength": 1
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "nitCi": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "nivelFidelidadId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "apellido",
+          "nivelFidelidadId",
+          "nombre",
+          "ubicacionId"
+        ]
+      },
+      "ClienteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "apellido": {
+            "type": "string"
+          },
+          "nombreCompleto": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "nitCi": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "nivelFidelidad": {
+            "type": "string"
+          },
+          "nivelFidelidadId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ubicacion": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ActualizarPrecioRequest": {
+        "type": "object",
+        "properties": {
+          "precioVenta": {
+            "type": "number",
+            "format": "double",
+            "minimum": 0.01
+          }
+        },
+        "required": [
+          "precioVenta"
+        ]
+      },
+      "ListVentaViewModel": {
+        "type": "object",
+        "properties": {
+          "ventaId": {
+            "type": "string"
+          },
+          "cliente": {
+            "type": "string"
+          },
+          "totalBruto": {
+            "type": "string"
+          },
+          "descuentoTotal": {
+            "type": "string"
+          },
+          "totalNeto": {
+            "type": "string"
+          },
+          "conFactura": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          }
+        }
+      },
+      "MetodoDePagoViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "metodo": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSubloteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codigoSublote": {
+            "type": "string"
+          },
+          "producto": {
+            "type": "string"
+          },
+          "cantidadActual": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          },
+          "fechaVencimiento": {
+            "type": "string"
+          },
+          "loteId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubloteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "codigoSublote": {
+            "type": "string"
+          },
+          "producto": {
+            "type": "string"
+          },
+          "fechaVencimiento": {
+            "type": "string"
+          },
+          "fechaProduccion": {
+            "type": "string"
+          },
+          "cantidadInicial": {
+            "type": "string"
+          },
+          "cantidadActual": {
+            "type": "string"
+          },
+          "costoUnitario": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          },
+          "loteId": {
+            "type": "string"
+          },
+          "idRaw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "loteIdRaw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidadInicialRaw": {
+            "type": "number",
+            "format": "double"
+          },
+          "cantidadActualRaw": {
+            "type": "number",
+            "format": "double"
+          },
+          "costoUnitarioRaw": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ListProductoViewModel": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "precio": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "tipoProducto": {
+            "type": "string"
+          },
+          "descontinuado": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PrecioHistoricoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreProducto": {
+            "type": "string"
+          },
+          "precioVenta": {
+            "type": "number",
+            "format": "double"
+          },
+          "fecha": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductoStockTotalViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "cantidadTotal": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ListMovimientoViewModel": {
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "referencia": {
+            "type": "string"
+          }
+        }
+      },
+      "MovimientoViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "string"
+          },
+          "costoUnitario": {
+            "type": "string"
+          },
+          "precioUnitario": {
+            "type": "string"
+          },
+          "costoTotal": {
+            "type": "string"
+          },
+          "precioTotal": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "referencia": {
+            "type": "string"
+          }
+        }
+      },
+      "ListLoteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaIngreso": {
+            "type": "string"
+          },
+          "compraId": {
+            "type": "string"
+          },
+          "cantidadSublotes": {
+            "type": "string"
+          },
+          "compraIdRaw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidadSublotesRaw": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "LoteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fechaIngreso": {
+            "type": "string"
+          },
+          "compraId": {
+            "type": "string"
+          },
+          "cantidadSublotes": {
+            "type": "string"
+          },
+          "idRaw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "compraIdRaw": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cantidadSublotesRaw": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ListaCompraViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "proveedor": {
+            "type": "string"
+          },
+          "costoBruto": {
+            "type": "string"
+          },
+          "costoNeto": {
+            "type": "string"
+          },
+          "descuentoTotal": {
+            "type": "string"
+          },
+          "loteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fecha": {
+            "type": "string"
+          }
+        }
+      },
+      "ListClienteViewModel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "apellido": {
+            "type": "string"
+          },
+          "nombreCompleto": {
+            "type": "string"
+          },
+          "telefono": {
+            "type": "string"
+          },
+          "nitCi": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "nivelFidelidad": {
+            "type": "string"
+          },
+          "nivelFidelidadId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ubicacion": {
+            "type": "string"
+          },
+          "ubicacionId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TipoProducto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
