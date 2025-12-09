@@ -327,18 +327,12 @@ export const Ventas = () => {
                       {venta.conFactura}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right space-x-2">
+                  <td className="px-6 py-4 text-right">
                     <button 
                       onClick={() => handleView(venta)}
                       className="text-gray-400 hover:text-primary-600 transition-colors"
                     >
                       <Eye size={18} />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(venta.ventaId)}
-                      className="text-gray-400 hover:text-red-600 transition-colors"
-                    >
-                      <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
@@ -491,16 +485,18 @@ export const Ventas = () => {
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors"
+                disabled={createMutation.isPending}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>
               <button 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onClick={handleSubmit(onSubmit as any)}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+                disabled={createMutation.isPending}
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Registrar Venta
+                {createMutation.isPending ? 'Procesando...' : 'Registrar Venta'}
               </button>
             </div>
           </div>
@@ -555,7 +551,7 @@ export const Ventas = () => {
                           <tr key={idx} className="border-t border-gray-200">
                             <td className="py-2">{d.producto}</td>
                             <td className="py-2">{d.cantidad}</td>
-                            <td className="py-2">{d.precioUnitario}</td>
+                            <td className="py-2">{d.costoUnitario || d.precioUnitario}</td>
                             <td className="py-2">{d.subtotal}</td>
                           </tr>
                         ))}

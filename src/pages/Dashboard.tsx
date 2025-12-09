@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import { TrendingUp, Users, Package, AlertCircle, ShoppingCart, Boxes } from 'lucide-react';
 import { api } from '../services/api';
+import type { DashboardEstadisticas, TopProductoStock, DistribucionStock, VentaReciente, SubloteProximoVencer } from '../types';
 
 interface StatCardProps {
   title: string;
@@ -23,36 +24,6 @@ interface StatCardProps {
   color: string;
   trend?: string;
   onClick?: () => void;
-}
-
-interface ProductoStock {
-  id: number;
-  nombre: string;
-  cantidadTotal: number;
-}
-
-interface Sublote {
-  id: string;
-  codigoSublote: string;
-  producto: string;
-  cantidadActual: string;
-  fechaVencimiento: string;
-  estado: string;
-}
-
-interface Venta {
-  ventaId: string;
-  cliente: string;
-  totalNeto: string;
-  fecha: string;
-  conFactura: string;
-}
-
-interface Compra {
-  id: string;
-  proveedor: string;
-  costoNeto: string;
-  fecha: string;
 }
 
 const StatCard = ({ title, value, icon: Icon, color, trend, onClick }: StatCardProps) => (
@@ -80,7 +51,52 @@ const COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'
 export const Dashboard = () => {
   const navigate = useNavigate();
   
-  // Queries para estadísticas
+  // Query principal de estadísticas
+  const { data: estadisticas } = useQuery<DashboardEstadisticas>({
+    queryKey: ['dashboard-estadisticas'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/estadisticas');
+      return res.data;
+    }
+  });
+
+  // Top 5 productos con mayor stock
+  const { data: topProductosStock } = useQuery<TopProductoStock[]>({
+    queryKey: ['dashboard-top-productos-stock'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/top-productos-stock');
+      return res.data;
+    }
+  });
+
+  // Distribución de stock
+  const { data: distribucionStock } = useQuery<DistribucionStock[]>({
+    queryKey: ['dashboard-distribucion-stock'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/distribucion-stock');
+      return res.data;
+    }
+  });
+
+  // Ventas recientes
+  const { data: ventasRecientes } = useQuery<VentaReciente[]>({
+    queryKey: ['dashboard-ventas-recientes'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/ventas-recientes');
+      return res.data;
+    }
+  });
+
+  // Sublotes próximos a vencer
+  const { data: sublotesProximosVencer } = useQuery<SubloteProximoVencer[]>({
+    queryKey: ['dashboard-sublotes-proximos-vencer'],
+    queryFn: async () => {
+      const res = await api.get('/dashboard/sublotes-proximos-vencer');
+      return res.data;
+    }
+  });
+
+  // Queries antiguas (mantener para compatibilidad con productos count)
   const { data: productosCount } = useQuery({
     queryKey: ['productos-count'],
     queryFn: async () => {
@@ -89,74 +105,16 @@ export const Dashboard = () => {
     }
   });
 
-  const { data: productosStock } = useQuery({
-    queryKey: ['productos-stock-total'],
-    queryFn: async () => {
-      const res = await api.get<ProductoStock[]>('/productos/stock-total');
-      return res.data;
-    }
-  });
+  // Formatear datos para gráficos
+  const chartTopProductos = topProductosStock?.map(p => ({
+    nombre: p.nombreProducto.length > 20 ? p.nombreProducto.substring(0, 20) + '...' : p.nombreProducto,
+    cantidad: p.stockTotal
+  })) || [];
 
-  const { data: sublotesProximosVencer } = useQuery({
-    queryKey: ['sublotes-proximos-vencer'],
-    queryFn: async () => {
-      const res = await api.get<Sublote[]>('/sublotes/proximos-vencer', {
-        params: { dias: 30 }
-      });
-      return res.data;
-    }
-  });
-
-  const { data: ventas } = useQuery({
-    queryKey: ['ventas'],
-    queryFn: async () => {
-      const res = await api.get<Venta[]>('/ventas');
-      return res.data;
-    }
-  });
-
-  const { data: compras } = useQuery({
-    queryKey: ['compras'],
-    queryFn: async () => {
-      const res = await api.get<Compra[]>('/compras');
-      return res.data;
-    }
-  });
-
-  const { data: clientes } = useQuery({
-    queryKey: ['clientes'],
-    queryFn: async () => {
-      const res = await api.get('/clientes');
-      return res.data;
-    }
-  });
-
-  // Calcular productos con bajo stock (menos de 10 unidades)
-  const productosbajoStock = productosStock?.filter(p => p.cantidadTotal < 10).length || 0;
-
-  // Calcular total de ventas en Bs
-  const totalVentas = ventas?.reduce((sum, venta) => {
-    const monto = parseFloat(venta.totalNeto.replace(/[^\d.-]/g, ''));
-    return sum + (isNaN(monto) ? 0 : monto);
-  }, 0) || 0;
-
-  // Top 5 productos con más stock
-  const topProductosStock = productosStock
-    ?.sort((a, b) => b.cantidadTotal - a.cantidadTotal)
-    .slice(0, 5)
-    .map(p => ({
-      nombre: p.nombre.length > 20 ? p.nombre.substring(0, 20) + '...' : p.nombre,
-      cantidad: p.cantidadTotal
-    })) || [];
-
-  // Distribución de stock por producto (Top 6)
-  const distribucionStock = productosStock
-    ?.sort((a, b) => b.cantidadTotal - a.cantidadTotal)
-    .slice(0, 6)
-    .map(p => ({
-      name: p.nombre.length > 15 ? p.nombre.substring(0, 15) + '...' : p.nombre,
-      value: p.cantidadTotal
-    })) || [];
+  const chartDistribucion = distribucionStock?.map(p => ({
+    name: p.nombreProducto.length > 15 ? p.nombreProducto.substring(0, 15) + '...' : p.nombreProducto,
+    value: p.stockTotal
+  })) || [];
 
   return (
     <div className="space-y-6">
@@ -164,15 +122,15 @@ export const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard 
           title="Total Ventas" 
-          value={`${totalVentas.toFixed(2)} Bs`}
+          value={`${estadisticas?.totalVentas.toFixed(2) || 0} Bs`}
           icon={TrendingUp}
           color="bg-primary-500"
-          trend={`${ventas?.length || 0} transacciones`}
+          trend={`${estadisticas?.numeroVentas || 0} transacciones`}
           onClick={() => navigate('/ventas')}
         />
         <StatCard 
           title="Clientes Registrados" 
-          value={clientes?.length || 0} 
+          value={estadisticas?.clientesRegistrados || 0} 
           icon={Users}
           color="bg-purple-500"
           onClick={() => navigate('/clientes')}
@@ -186,22 +144,23 @@ export const Dashboard = () => {
         />
         <StatCard 
           title="Productos Bajo Stock" 
-          value={productosbajoStock} 
+          value={estadisticas?.productosBajoStock || 0} 
           icon={AlertCircle}
           color="bg-rose-500"
-          trend="< 10 unidades"
+          trend="< punto de reorden"
           onClick={() => navigate('/productos')}
         />
         <StatCard 
           title="Total Compras" 
-          value={compras?.length || 0}
+          value={`${estadisticas?.totalCompras.toFixed(2) || 0} Bs`}
           icon={ShoppingCart}
           color="bg-blue-500"
+          trend={`${estadisticas?.numeroCompras || 0} transacciones`}
           onClick={() => navigate('/compras')}
         />
         <StatCard 
           title="Productos por Vencer" 
-          value={sublotesProximosVencer?.length || 0}
+          value={estadisticas?.productosProximosVencer || 0}
           icon={Boxes}
           color="bg-orange-500"
           trend="Próximos 30 días"
@@ -214,9 +173,10 @@ export const Dashboard = () => {
         {/* Top Products by Stock */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold mb-6 text-gray-800">Top 5 Productos con Mayor Stock</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topProductosStock}>
+          <div className="h-80" style={{ minHeight: '320px' }}>
+            {chartTopProductos.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartTopProductos}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis 
                   dataKey="nombre" 
@@ -233,17 +193,23 @@ export const Dashboard = () => {
                 <Bar dataKey="cantidad" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                Cargando datos...
+              </div>
+            )}
           </div>
         </div>
 
         {/* Stock Distribution Pie Chart */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold mb-6 text-gray-800">Distribución de Stock</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+          <div className="h-80" style={{ minHeight: '320px' }}>
+            {chartDistribucion.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
                 <Pie
-                  data={distribucionStock}
+                  data={chartDistribucion}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -252,13 +218,18 @@ export const Dashboard = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {distribucionStock.map((_, index) => (
+                  {chartDistribucion.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-500">
+                Cargando datos...
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -280,14 +251,14 @@ export const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {ventas?.slice(0, 5).map((venta, idx) => (
+                {ventasRecientes?.map((venta, idx) => (
                   <tr key={venta.ventaId || idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-3">{venta.cliente}</td>
-                    <td className="px-6 py-3 text-xs">{venta.fecha}</td>
-                    <td className="px-6 py-3 font-medium text-primary-600">{venta.totalNeto}</td>
+                    <td className="px-6 py-3">{venta.nombreCliente}</td>
+                    <td className="px-6 py-3 text-xs">{new Date(venta.fechaVenta).toLocaleDateString('es-BO')}</td>
+                    <td className="px-6 py-3 font-medium text-primary-600">{venta.totalVenta.toFixed(2)} Bs</td>
                   </tr>
                 ))}
-                {(!ventas || ventas.length === 0) && (
+                {(!ventasRecientes || ventasRecientes.length === 0) && (
                   <tr>
                     <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
                       No hay ventas registradas
@@ -314,10 +285,10 @@ export const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {sublotesProximosVencer?.slice(0, 5).map((sublote, idx) => (
-                  <tr key={sublote.id || idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-3">{sublote.producto}</td>
-                    <td className="px-6 py-3">{sublote.cantidadActual}</td>
+                {sublotesProximosVencer?.map((sublote, idx) => (
+                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-3">{sublote.nombreProducto}</td>
+                    <td className="px-6 py-3">{sublote.cantidad}</td>
                     <td className="px-6 py-3">
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                         {sublote.fechaVencimiento}
@@ -339,14 +310,14 @@ export const Dashboard = () => {
       </div>
 
       {/* Low Stock Alert */}
-      {productosbajoStock > 0 && (
+      {(estadisticas?.productosBajoStock || 0) > 0 && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
           <div className="flex items-center">
             <AlertCircle className="text-yellow-600 mr-3" size={24} />
             <div>
               <h3 className="text-yellow-800 font-semibold">Alerta de Stock Bajo</h3>
               <p className="text-yellow-700 text-sm mt-1">
-                Hay {productosbajoStock} producto{productosbajoStock !== 1 ? 's' : ''} con menos de 10 unidades en stock.
+                Hay {estadisticas?.productosBajoStock || 0} producto{(estadisticas?.productosBajoStock || 0) !== 1 ? 's' : ''} con stock bajo.
                 Considera realizar un pedido de reposición.
               </p>
             </div>

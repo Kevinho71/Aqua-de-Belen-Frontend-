@@ -4,7 +4,7 @@ import { Plus, Edit, Trash2, X, Package } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { api } from '../services/api';
 import { Pagination } from '../components/ui/Pagination';
-import type { Producto, ProductoDTORequest, Sublote, Page } from '../types';
+import type { Producto, ProductoDTORequest, Sublote, Page, TipoProducto } from '../types';
 
 
 export const Productos = () => {
@@ -64,7 +64,7 @@ export const Productos = () => {
   const productos = productosData?.content || [];
   const totalPages = productosData?.totalPages || 0;
 
-  const { data: tiposProducto } = useQuery({
+  const { data: tiposProducto } = useQuery<TipoProducto[]>({
     queryKey: ['tiposProducto'],
     queryFn: async () => {
       const res = await api.get('/productos/tipos');
@@ -333,13 +333,18 @@ export const Productos = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Producto ID</label>
-                <input 
-                  type="number"
-                  min="0"
-                  {...register('tipoProductoId', { required: true, min: 0 })}
+                <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Producto</label>
+                <select 
+                  {...register('tipoProductoId', { required: true, valueAsNumber: true })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
+                >
+                  <option value="">Seleccione un tipo</option>
+                  {tiposProducto?.map((tipo) => (
+                    <option key={tipo.id} value={tipo.id}>
+                      {tipo.nombre}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -355,15 +360,17 @@ export const Productos = () => {
                 <button 
                   type="button" 
                   onClick={handleCloseModal}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Guardar
+                  {createMutation.isPending || updateMutation.isPending ? 'Guardando...' : 'Guardar'}
                 </button>
               </div>
             </form>

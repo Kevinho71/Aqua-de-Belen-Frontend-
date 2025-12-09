@@ -256,7 +256,7 @@ export const Proveedores = () => {
                 >
                   <option value="">Seleccione una ubicación</option>
                   {ubicaciones?.map((u) => (
-                    <option key={u.id} value={u.id}>{u.ubicacion}</option>
+                    <option key={u.id} value={u.id}>{u.nombreCompleto}</option>
                   ))}
                 </select>
               </div>
@@ -265,15 +265,17 @@ export const Proveedores = () => {
                 <button 
                   type="button" 
                   onClick={handleCloseModal}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingProveedor ? 'Actualizar' : 'Guardar'}
+                  {createMutation.isPending || updateMutation.isPending ? (editingProveedor ? 'Actualizando...' : 'Guardando...') : (editingProveedor ? 'Actualizar' : 'Guardar')}
                 </button>
               </div>
             </form>

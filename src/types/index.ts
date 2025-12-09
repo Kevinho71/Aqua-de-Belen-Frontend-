@@ -1,3 +1,8 @@
+export interface TipoProducto {
+  id: number;
+  nombre: string;
+}
+
 export interface Producto {
   id?: string | number;
   productoId: string;
@@ -21,7 +26,12 @@ export interface Ubicacion {
   id: number;
   ciudad: string;
   zona: string;
-  ubicacion: string;
+  nombreCompleto: string;
+}
+
+export interface NivelFidelidad {
+  id: number;
+  nombre: string;
 }
 
 export interface Cliente {
@@ -237,4 +247,39 @@ export interface Page<T> {
   first: boolean;
   last: boolean;
   empty: boolean;
+}
+
+export interface DashboardEstadisticas {
+  totalVentas: number;
+  numeroVentas: number;
+  totalCompras: number;
+  numeroCompras: number;
+  productosProximosVencer: number;
+  productosBajoStock: number;
+  clientesRegistrados: number;
+}
+
+export interface TopProductoStock {
+  productoId: number;
+  nombreProducto: string;
+  stockTotal: number;
+}
+
+export interface DistribucionStock {
+  nombreProducto: string;
+  porcentaje: number;
+  stockTotal: number;
+}
+
+export interface VentaReciente {
+  ventaId: number;
+  nombreCliente: string;
+  fechaVenta: string;
+  totalVenta: number;
+}
+
+export interface SubloteProximoVencer {
+  nombreProducto: string;
+  cantidad: number;
+  fechaVencimiento: string;
 }

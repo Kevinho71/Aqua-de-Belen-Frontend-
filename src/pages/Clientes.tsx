@@ -4,7 +4,7 @@ import { Plus, Search, Edit, Trash2, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { api } from '../services/api';
 import { Pagination } from '../components/ui/Pagination';
-import type { Cliente, ClienteDTORequest, Ubicacion, Page } from '../types';
+import type { Cliente, ClienteDTORequest, Ubicacion, NivelFidelidad, Page } from '../types';
 
 export const Clientes = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,13 +16,39 @@ export const Clientes = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<ClienteDTORequest>();
 
   // Ubicaciones para el select
-  const { data: ubicaciones } = useQuery({
+  const { data: ubicaciones } = useQuery<Ubicacion[]>({
     queryKey: ['ubicaciones'],
     queryFn: async () => {
-      const res = await api.get<Ubicacion[]>('/ubicaciones');
+      const res = await api.get('/ubicaciones');
       return res.data;
-    }
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
+
+  // Obtener todos los clientes para extraer niveles de fidelidad únicos
+  const { data: todosClientes } = useQuery<Cliente[]>({
+    queryKey: ['clientes-all'],
+    queryFn: async () => {
+      const res = await api.get('/clientes', { params: { page: 0, size: 1000 } });
+      const data = res.data;
+      if (data && 'content' in data) {
+        return data.content;
+      }
+      return Array.isArray(data) ? data : [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Extraer niveles de fidelidad únicos de los clientes existentes
+  const nivelesFidelidad: NivelFidelidad[] = todosClientes
+    ? Array.from(
+        new Map(
+          todosClientes
+            .filter(c => c.nivelFidelidadId && c.nivelFidelidad)
+            .map(c => [c.nivelFidelidadId, { id: c.nivelFidelidadId, nombre: c.nivelFidelidad }])
+        ).values()
+      ).sort((a, b) => a.id - b.id)
+    : [];
 
   const { data: clientesData, isLoading } = useQuery({
     queryKey: ['clientes', searchNombre, searchApellido, page],
@@ -301,23 +327,26 @@ export const Clientes = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">ID Fidelidad</label>
-                  <input 
-                    type="number"
-                    min="0"
-                    {...register('nivelFidelidadId', { required: true, min: 0 })}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nivel de Fidelidad</label>
+                  <select
+                    {...register('nivelFidelidadId', { required: true, valueAsNumber: true })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  />
+                  >
+                    <option value="">Seleccione un nivel</option>
+                    {nivelesFidelidad?.map((nivel) => (
+                      <option key={nivel.id} value={nivel.id}>{nivel.nombre}</option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Ubicación</label>
                   <select
-                    {...register('ubicacionId', { required: true })}
+                    {...register('ubicacionId', { required: true, valueAsNumber: true })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Seleccione una ubicación</option>
                     {ubicaciones?.map((u) => (
-                      <option key={u.id} value={u.id}>{u.ubicacion}</option>
+                      <option key={u.id} value={u.id}>{u.nombreCompleto}</option>
                     ))}
                   </select>
                 </div>
@@ -327,15 +356,17 @@ export const Clientes = () => {
                 <button 
                   type="button" 
                   onClick={handleCloseModal}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingCliente ? 'Actualizar' : 'Guardar'}
+                  {createMutation.isPending || updateMutation.isPending ? (editingCliente ? 'Actualizando...' : 'Guardando...') : (editingCliente ? 'Actualizar' : 'Guardar')}
                 </button>
               </div>
             </form>

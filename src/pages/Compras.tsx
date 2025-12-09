@@ -302,18 +302,12 @@ export const Compras = () => {
                   <td className="px-6 py-4">{compra.fecha}</td>
                   <td className="px-6 py-4 font-medium">{compra.costoNeto}</td>
                   <td className="px-6 py-4">{compra.loteId}</td>
-                  <td className="px-6 py-4 text-right space-x-2">
+                  <td className="px-6 py-4 text-right">
                     <button 
                       onClick={() => handleView(compra)}
                       className="text-gray-400 hover:text-primary-600 transition-colors"
                     >
                       <Eye size={18} />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(compra.id)}
-                      className="text-gray-400 hover:text-red-600 transition-colors"
-                    >
-                      <Trash2 size={18} />
                     </button>
                   </td>
                 </tr>
@@ -458,15 +452,17 @@ export const Compras = () => {
               <button 
                 type="button" 
                 onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors"
+                disabled={createMutation.isPending}
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Cancelar
               </button>
               <button 
                 onClick={handleSubmit(onSubmit as unknown as SubmitHandler<Record<string, unknown>>)}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors"
+                disabled={createMutation.isPending}
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Registrar Compra
+                {createMutation.isPending ? 'Procesando...' : 'Registrar Compra'}
               </button>
             </div>
           </div>

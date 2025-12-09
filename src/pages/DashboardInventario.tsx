@@ -347,13 +347,15 @@ export const DashboardInventario = () => {
                         <td className="px-6 py-4 text-right space-x-2">
                           <button
                             onClick={() => handleAprobarPedido(pedido.id)}
-                            className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-medium transition-colors"
+                            disabled={cambiarEstadoPedidoMutation.isPending}
+                            className="px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Aprobar
                           </button>
                           <button
                             onClick={() => handleRechazarPedido(pedido.id)}
-                            className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors"
+                            disabled={cambiarEstadoPedidoMutation.isPending}
+                            className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Rechazar
                           </button>
@@ -439,9 +441,10 @@ export const DashboardInventario = () => {
                       </div>
                       <button
                         onClick={() => handleAprobarConsolidacion(consolidado.proveedorId)}
-                        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors"
+                        disabled={cambiarEstadoPedidoMutation.isPending}
+                        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        Aprobar Consolidación
+                        {cambiarEstadoPedidoMutation.isPending ? 'Procesando...' : 'Aprobar Consolidación'}
                       </button>
                     </div>
                   </div>

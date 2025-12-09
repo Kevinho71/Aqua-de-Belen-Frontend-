@@ -1,0 +1,398 @@
+================================================================================
+                    ENDPOINTS DEL DASHBOARD - API REST
+================================================================================
+
+BASE URL: /api/v1/dashboard
+
+================================================================================
+1. ESTADÍSTICAS GENERALES
+================================================================================
+
+Endpoint: GET /api/v1/dashboard/estadisticas
+
+Descripción: Obtiene todas las estadísticas del dashboard (ventas, compras, 
+             stock, clientes)
+
+Body Request: NINGUNO (GET request)
+
+Body Response:
+{
+  "totalVentas": 584290.0,
+  "numeroVentas": 42,
+  "totalCompras": 450000.0,
+  "numeroCompras": 15,
+  "productosProximosVencer": 2,
+  "productosBajoStock": 6,
+  "clientesRegistrados": 125
+}
+
+Descripción de campos:
+  - totalVentas: Monto total de todas las ventas (excluye anuladas)
+  - numeroVentas: Cantidad de transacciones de venta realizadas
+  - totalCompras: Monto total de todas las compras
+  - numeroCompras: Cantidad de transacciones de compra realizadas
+  - productosProximosVencer: Productos que vencen en los próximos 30 días
+  - productosBajoStock: Productos con stock actual < punto de reorden
+  - clientesRegistrados: Total de clientes registrados en el sistema
+
+================================================================================
+2. TOP 5 PRODUCTOS CON MAYOR STOCK
+================================================================================
+
+Endpoint: GET /api/v1/dashboard/top-productos-stock
+
+Descripción: Retorna los 5 productos con mayor cantidad de unidades disponibles
+
+Body Request: NINGUNO (GET request)
+
+Body Response:
+[
+  {
+    "productoId": 1,
+    "nombreProducto": "Kit de Brochas Professional 11pz",
+    "stockTotal": 195.0
+  },
+  {
+    "productoId": 2,
+    "nombreProducto": "Set Pinceles Cololr Full",
+    "stockTotal": 104.0
+  },
+  {
+    "productoId": 3,
+    "nombreProducto": "Pestañ Exx",
+    "stockTotal": 100.0
+  },
+  {
+    "productoId": 4,
+    "nombreProducto": "Lancôme La Vie est Belle",
+    "stockTotal": 95.5
+  },
+  {
+    "productoId": 5,
+    "nombreProducto": "Esmalte Quick Dry",
+    "stockTotal": 92.0
+  }
+]
+
+Descripción de campos:
+  - productoId: ID único del producto
+  - nombreProducto: Nombre del producto
+  - stockTotal: Suma de cantidad_actual de todos los sublotes disponibles
+
+Uso: Gráfico de barras "Top 5 Productos con Mayor Stock"
+
+================================================================================
+3. ÚLTIMAS 5 VENTAS
+================================================================================
+
+Endpoint: GET /api/v1/dashboard/ventas-recientes
+
+Descripción: Retorna las 5 ventas más recientes ordenadas por fecha DESC
+
+Body Request: NINGUNO (GET request)
+
+Body Response:
+[
+  {
+    "ventaId": 101,
+    "nombreCliente": "Juan Pérez García",
+    "fechaVenta": "2025-12-08T17:49:14",
+    "totalVenta": 32500.0
+  },
+  {
+    "ventaId": 98,
+    "nombreCliente": "Carlos Mendoza Silva",
+    "fechaVenta": "2025-11-26T10:05:46",
+    "totalVenta": 8478.75
+  },
+  {
+    "ventaId": 97,
+    "nombreCliente": "Carlos Mendoza Silva",
+    "fechaVenta": "2025-11-26T10:05:28",
+    "totalVenta": 8478.75
+  },
+  {
+    "ventaId": 94,
+    "nombreCliente": "Abigail Farfan Chaves",
+    "fechaVenta": "2025-11-26T07:45:53",
+    "totalVenta": 79200.0
+  },
+  {
+    "ventaId": 92,
+    "nombreCliente": "Carlos Mendoza Silva",
+    "fechaVenta": "2025-11-26T07:10:39",
+    "totalVenta": 5500.0
+  }
+]
+
+Descripción de campos:
+  - ventaId: ID único de la venta
+  - nombreCliente: Nombre completo del cliente
+  - fechaVenta: Fecha y hora de la venta (formato ISO 8601)
+  - totalVenta: Monto total de la venta en Bs
+
+Uso: Tabla "Ventas Recientes" en el dashboard
+
+================================================================================
+4. DISTRIBUCIÓN DE STOCK
+================================================================================
+
+Endpoint: GET /api/v1/dashboard/distribucion-stock
+
+Descripción: Distribución porcentual de stock por producto (máximo 6)
+             Para gráfico de pie/donut
+
+Body Request: NINGUNO (GET request)
+
+Body Response:
+[
+  {
+    "nombreProducto": "Kit de Brochas Professional 11pz",
+    "porcentaje": 27.34,
+    "stockTotal": 195.0
+  },
+  {
+    "nombreProducto": "Loción Body Care",
+    "porcentaje": 14.12,
+    "stockTotal": 100.8
+  },
+  {
+    "nombreProducto": "Jean Paul Gault...",
+    "porcentaje": 13.45,
+    "stockTotal": 96.0
+  },
+  {
+    "nombreProducto": "Versace Eros",
+    "porcentaje": 14.0,
+    "stockTotal": 100.0
+  },
+  {
+    "nombreProducto": "Lancôme La Vie...",
+    "porcentaje": 14.0,
+    "stockTotal": 100.0
+  },
+  {
+    "nombreProducto": "Esmalte Quick D...",
+    "porcentaje": 14.0,
+    "stockTotal": 100.0
+  }
+]
+
+Descripción de campos:
+  - nombreProducto: Nombre del producto
+  - porcentaje: Porcentaje del stock total (con 2 decimales)
+  - stockTotal: Cantidad total de unidades disponibles
+
+Uso: Gráfico de pie "Distribución de Stock"
+
+NOTA: Los porcentajes suman aproximadamente 100% considerando los top 6
+
+================================================================================
+5. SUBLOTES PRÓXIMOS A VENCER
+================================================================================
+
+Endpoint: GET /api/v1/dashboard/sublotes-proximos-vencer
+
+Descripción: Sublotes que vencen en los próximos 30 días (ordenados por 
+             fecha de vencimiento ASC)
+
+Body Request: NINGUNO (GET request)
+
+Body Response:
+[
+  {
+    "nombreProducto": "Dior",
+    "cantidad": 50.0,
+    "fechaVencimiento": "2025-12-10"
+  },
+  {
+    "nombreProducto": "Kit de Brochas Professional 11pz",
+    "cantidad": 40.0,
+    "fechaVencimiento": "2025-12-31"
+  }
+]
+
+Descripción de campos:
+  - nombreProducto: Nombre del producto
+  - cantidad: Cantidad de unidades del sublote
+  - fechaVencimiento: Fecha de vencimiento (formato YYYY-MM-DD)
+
+Uso: Tabla "Sublotes Próximos a Vencer"
+
+NOTA: Solo incluye sublotes con estado DISPONIBLE o POCO_CANTIDAD
+
+================================================================================
+NOTAS TÉCNICAS
+================================================================================
+
+1. AUTENTICACIÓN:
+   - Todos los endpoints requieren autenticación (si está configurada)
+   - CORS habilitado para el frontend en producción
+
+2. CÓDIGOS DE RESPUESTA HTTP:
+   - 200 OK: Petición exitosa
+   - 401 Unauthorized: No autenticado
+   - 403 Forbidden: Sin permisos
+   - 500 Internal Server Error: Error del servidor
+
+3. HEADERS REQUERIDOS:
+   Content-Type: application/json
+   Accept: application/json
+
+4. RENDIMIENTO:
+   - Todas las consultas están optimizadas con SQL nativo
+   - Tiempo de respuesta esperado: 10-100ms por endpoint
+   - Carga completa del dashboard: ~150-250ms
+
+5. FILTROS APLICADOS:
+   - Ventas: Se excluyen ventas con estado "ANULADA"
+   - Productos: Se excluyen productos descontinuados
+   - Sublotes: Solo estados DISPONIBLE y POCO_CANTIDAD
+   - Fechas: Zona horaria del servidor
+
+6. LÍMITES:
+   - Top productos: Máximo 5
+   - Ventas recientes: Máximo 5
+   - Distribución stock: Máximo 6
+   - Sublotes próximos a vencer: Máximo 10
+   - Productos por vencer: Ventana de 30 días
+
+================================================================================
+EJEMPLO DE USO CON FETCH API (JavaScript)
+================================================================================
+
+// 1. Obtener estadísticas generales
+const stats = await fetch('http://localhost:8080/api/v1/dashboard/estadisticas')
+  .then(response => response.json());
+
+console.log('Total Ventas:', stats.totalVentas);
+console.log('Productos Bajo Stock:', stats.productosBajoStock);
+
+
+// 2. Obtener top 5 productos
+const topProductos = await fetch('http://localhost:8080/api/v1/dashboard/top-productos-stock')
+  .then(response => response.json());
+
+topProductos.forEach(p => {
+  console.log(`${p.nombreProducto}: ${p.stockTotal} unidades`);
+});
+
+
+// 3. Obtener últimas ventas
+const ventas = await fetch('http://localhost:8080/api/v1/dashboard/ventas-recientes')
+  .then(response => response.json());
+
+ventas.forEach(v => {
+  console.log(`Venta #${v.ventaId} - ${v.nombreCliente}: ${v.totalVenta} Bs`);
+});
+
+
+// 4. Obtener distribución de stock
+const distribucion = await fetch('http://localhost:8080/api/v1/dashboard/distribucion-stock')
+  .then(response => response.json());
+
+// Renderizar gráfico de pie
+const data = distribucion.map(d => ({
+  name: d.nombreProducto,
+  value: d.porcentaje
+}));
+
+
+// 5. Obtener sublotes próximos a vencer
+const sublotes = await fetch('http://localhost:8080/api/v1/dashboard/sublotes-proximos-vencer')
+  .then(response => response.json());
+
+sublotes.forEach(s => {
+  console.log(`${s.nombreProducto}: ${s.cantidad} unidades - Vence: ${s.fechaVencimiento}`);
+});
+
+================================================================================
+EJEMPLO DE USO CON AXIOS (JavaScript)
+================================================================================
+
+import axios from 'axios';
+
+const API_URL = 'http://localhost:8080/api/v1/dashboard';
+
+// Obtener todas las estadísticas
+const obtenerEstadisticas = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/estadisticas`);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener estadísticas:', error);
+    throw error;
+  }
+};
+
+// Obtener top productos
+const obtenerTopProductos = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/top-productos-stock`);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener top productos:', error);
+    throw error;
+  }
+};
+
+// Obtener ventas recientes
+const obtenerVentasRecientes = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/ventas-recientes`);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener ventas recientes:', error);
+    throw error;
+  }
+};
+
+// Obtener distribución
+const obtenerDistribucion = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/distribucion-stock`);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener distribución:', error);
+    throw error;
+  }
+};
+
+// Obtener sublotes próximos a vencer
+const obtenerSublotesProximosVencer = async () => {
+  try {
+    const { data } = await axios.get(`${API_URL}/sublotes-proximos-vencer`);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener sublotes:', error);
+    throw error;
+  }
+};
+
+// Cargar todo el dashboard
+const cargarDashboard = async () => {
+  try {
+    const [stats, topProductos, ventas, distribucion, sublotes] = await Promise.all([
+      obtenerEstadisticas(),
+      obtenerTopProductos(),
+      obtenerVentasRecientes(),
+      obtenerDistribucion(),
+      obtenerSublotesProximosVencer()
+    ]);
+
+    return {
+      stats,
+      topProductos,
+      ventas,
+      distribucion,
+      sublotes
+    };
+  } catch (error) {
+    console.error('Error al cargar dashboard:', error);
+    throw error;
+  }
+};
+
+================================================================================
+FIN DEL DOCUMENTO
+================================================================================
