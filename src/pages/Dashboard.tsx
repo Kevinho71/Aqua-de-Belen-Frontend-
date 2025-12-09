@@ -184,7 +184,6 @@ export const Dashboard = () => {
           value={estadisticas?.productosProximosVencer || 0}
           icon={Boxes}
           color={getGradientColor('bg-orange-500')}
-          color="bg-orange-500"
           trend="Próximos 30 días"
           onClick={() => navigate('/sublotes')}
         />
