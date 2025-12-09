@@ -15,18 +15,19 @@ import {
   BarChart3
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import logoAqua from '../../assets/LOGO-AQUA.jpg';
 
 const SidebarItem = ({ icon: Icon, label, to, active }: { icon: any, label: string, to: string, active: boolean }) => (
   <Link
     to={to}
     className={cn(
-      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group",
       active 
-        ? "bg-primary-100 text-primary-700 font-medium" 
-        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/30" 
+        : "text-gray-600 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 hover:text-purple-700 hover:shadow-md hover:scale-[1.02]"
     )}
   >
-    <Icon size={20} />
+    <Icon size={20} className="transition-transform group-hover:scale-110" />
     <span>{label}</span>
   </Link>
 );
@@ -53,13 +54,18 @@ export const Layout = () => {
       {/* Sidebar */}
       <aside 
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-white to-purple-50/40 border-r border-purple-100 shadow-xl transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
           !isSidebarOpen && "-translate-x-full lg:hidden"
         )}
       >
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100">
-          <h1 className="text-xl font-bold text-primary-600">Aqua de Belén</h1>
-          <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-gray-500">
+        <div className="h-auto flex flex-col items-center justify-center px-6 pt-6 pb-4 border-b border-purple-100 bg-gradient-to-r from-purple-50/50 to-pink-50/50">
+          <img 
+            src={logoAqua} 
+            alt="Logo Aqua de Belén" 
+            className="w-32 h-32 object-contain mb-3 rounded-xl shadow-lg ring-4 ring-purple-100/50 transition-transform hover:scale-105"
+          />
+          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Aqua de Belén</h1>
+          <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden absolute top-4 right-4 text-gray-500">
             <X size={24} />
           </button>
         </div>
@@ -77,7 +83,7 @@ export const Layout = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 lg:px-8">
+        <header className="h-16 bg-gradient-to-r from-white via-purple-50/20 to-white border-b border-purple-100 shadow-sm flex items-center px-6 lg:px-8">
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className={cn("mr-4 text-gray-500 lg:hidden", isSidebarOpen && "hidden")}

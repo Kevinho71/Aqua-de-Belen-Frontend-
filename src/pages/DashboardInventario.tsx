@@ -1,8 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { AlertTriangle, CheckCircle, TrendingUp, Package, FileSpreadsheet, DollarSign, Truck } from 'lucide-react';
 import type { InventoryKPI, AglomeracionResponse, PedidoSugerido } from '../types';
+
+const LoadingSpinner = () => {
+  const [currentMessage, setCurrentMessage] = useState(0);
+  
+  const loadingMessages = [
+    '🔍 Calculando ROP...',
+    '📊 Calculando EOQ...',
+    '📦 Analizando inventario...',
+    '⚡ Clasificando ABC...',
+    '🎯 Creando órdenes...',
+    '🔄 Consolidando pedidos...',
+    '✨ Puliendo detalles...',
+    '🚀 Casi listo...'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentMessage((prev) => (prev + 1) % loadingMessages.length);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex items-center justify-center py-20">
+      <div className="bg-gradient-to-br from-white to-purple-50/50 p-8 rounded-2xl shadow-lg border border-purple-100 max-w-sm w-full">
+        {/* Animated Spinner */}
+        <div className="relative mb-6">
+          <div className="w-16 h-16 mx-auto">
+            {/* Outer rotating ring */}
+            <div className="absolute inset-0 border-4 border-purple-200 rounded-full animate-spin" 
+                 style={{ borderTopColor: '#a855f7', animationDuration: '1s' }} />
+            
+            {/* Middle ring */}
+            <div className="absolute inset-1 border-4 border-pink-200 rounded-full animate-spin" 
+                 style={{ borderTopColor: '#ec4899', animationDuration: '1.5s', animationDirection: 'reverse' }} />
+            
+            {/* Center icon */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Package className="w-6 h-6 text-purple-600 animate-pulse" />
+            </div>
+          </div>
+        </div>
+
+        {/* Loading Text */}
+        <div className="text-center">
+          <h3 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+            Analizando Inventario
+          </h3>
+          <p className="text-gray-600 text-sm font-medium min-h-[20px] transition-all duration-300">
+            {loadingMessages[currentMessage]}
+          </p>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mt-4 w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-fuchsia-500 rounded-full animate-pulse"
+               style={{ width: `${((currentMessage + 1) / loadingMessages.length) * 100}%`, transition: 'width 1.5s ease-in-out' }} />
+        </div>
+
+        {/* Loading dots */}
+        <div className="flex justify-center gap-1.5 mt-3">
+          <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-1.5 h-1.5 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-1.5 h-1.5 bg-fuchsia-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const DashboardInventario = () => {
   const [activeTab, setActiveTab] = useState<'kpis' | 'alertas' | 'pedidos' | 'consolidacion'>('kpis');
@@ -100,8 +170,40 @@ export const DashboardInventario = () => {
     }
   };
 
-  if (isLoading) return <div className="text-center py-8">Cargando análisis de inventario...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">Error al cargar los datos de inventario</div>;
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">Análisis de Inventario</h1>
+          <button
+            disabled
+            className="flex items-center gap-2 px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+          >
+            <FileSpreadsheet size={20} />
+            Descargar Excel
+          </button>
+        </div>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+  
+  if (error) return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-800">Análisis de Inventario</h1>
+      <div className="flex items-center justify-center py-20">
+        <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg max-w-md">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="text-red-500" size={28} />
+            <div>
+              <h3 className="text-red-800 font-bold text-lg">Error al cargar datos</h3>
+              <p className="text-red-700 text-sm mt-1">No se pudo cargar el análisis de inventario. Por favor, intenta de nuevo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">

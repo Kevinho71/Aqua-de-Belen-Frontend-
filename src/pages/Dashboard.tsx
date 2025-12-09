@@ -28,25 +28,46 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, icon: Icon, color, trend, onClick }: StatCardProps) => (
   <div 
-    className={`bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow ${
-      onClick ? 'cursor-pointer hover:border-primary-300' : ''
+    className={`group relative bg-gradient-to-br from-white to-gray-50/50 p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:border-primary-200 transition-all duration-300 overflow-hidden ${
+      onClick ? 'cursor-pointer hover:-translate-y-1' : ''
     }`}
     onClick={onClick}
   >
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm text-gray-500 font-medium">{title}</p>
-        <h3 className="text-2xl font-bold mt-2 text-gray-900">{value}</h3>
-        {trend && <p className="text-xs text-green-600 mt-1">{trend}</p>}
+    {/* Decorative background gradient */}
+    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-50 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    
+    <div className="relative flex items-center justify-between">
+      <div className="flex-1">
+        <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide">{title}</p>
+        <h3 className="text-3xl font-bold mt-2 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">{value}</h3>
+        {trend && (
+          <p className="text-xs font-medium text-emerald-600 mt-2 flex items-center gap-1">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            {trend}
+          </p>
+        )}
       </div>
-      <div className={`p-3 rounded-lg ${color}`}>
-        <Icon className="w-6 h-6 text-white" />
+      <div className={`relative p-4 rounded-xl ${color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+        <Icon className="w-7 h-7 text-white" />
+        <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
     </div>
   </div>
 );
 
-const COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+const COLORS = ['#a855f7', '#ec4899', '#8b5cf6', '#f97316', '#ef4444', '#d946ef'];
+
+const getGradientColor = (baseColor: string) => {
+  const gradients: Record<string, string> = {
+    'bg-primary-500': 'bg-gradient-to-br from-purple-400 to-purple-600',
+    'bg-purple-500': 'bg-gradient-to-br from-purple-400 to-fuchsia-600',
+    'bg-emerald-500': 'bg-gradient-to-br from-emerald-400 to-emerald-600',
+    'bg-rose-500': 'bg-gradient-to-br from-rose-400 to-rose-600',
+    'bg-blue-500': 'bg-gradient-to-br from-violet-400 to-purple-600',
+    'bg-orange-500': 'bg-gradient-to-br from-orange-400 to-orange-600',
+  };
+  return gradients[baseColor] || baseColor;
+};
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -117,14 +138,14 @@ export const Dashboard = () => {
   })) || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fadeIn">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard 
           title="Total Ventas" 
           value={`${estadisticas?.totalVentas.toFixed(2) || 0} Bs`}
           icon={TrendingUp}
-          color="bg-primary-500"
+          color={getGradientColor('bg-primary-500')}
           trend={`${estadisticas?.numeroVentas || 0} transacciones`}
           onClick={() => navigate('/ventas')}
         />
@@ -132,21 +153,21 @@ export const Dashboard = () => {
           title="Clientes Registrados" 
           value={estadisticas?.clientesRegistrados || 0} 
           icon={Users}
-          color="bg-purple-500"
+          color={getGradientColor('bg-purple-500')}
           onClick={() => navigate('/clientes')}
         />
         <StatCard 
           title="Productos en Inventario" 
           value={productosCount || 0} 
           icon={Package}
-          color="bg-emerald-500"
+          color={getGradientColor('bg-emerald-500')}
           onClick={() => navigate('/productos')}
         />
         <StatCard 
           title="Productos Bajo Stock" 
           value={estadisticas?.productosBajoStock || 0} 
           icon={AlertCircle}
-          color="bg-rose-500"
+          color={getGradientColor('bg-rose-500')}
           trend="< punto de reorden"
           onClick={() => navigate('/productos')}
         />
@@ -154,7 +175,7 @@ export const Dashboard = () => {
           title="Total Compras" 
           value={`${estadisticas?.totalCompras.toFixed(2) || 0} Bs`}
           icon={ShoppingCart}
-          color="bg-blue-500"
+          color={getGradientColor('bg-blue-500')}
           trend={`${estadisticas?.numeroCompras || 0} transacciones`}
           onClick={() => navigate('/compras')}
         />
@@ -162,6 +183,7 @@ export const Dashboard = () => {
           title="Productos por Vencer" 
           value={estadisticas?.productosProximosVencer || 0}
           icon={Boxes}
+          color={getGradientColor('bg-orange-500')}
           color="bg-orange-500"
           trend="Próximos 30 días"
           onClick={() => navigate('/sublotes')}
@@ -171,8 +193,11 @@ export const Dashboard = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Products by Stock */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold mb-6 text-gray-800">Top 5 Productos con Mayor Stock</h3>
+        <div className="bg-gradient-to-br from-white to-purple-50/30 p-6 rounded-2xl shadow-xl border border-purple-100 hover:shadow-2xl transition-all duration-300">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full" />
+            <h3 className="text-lg font-bold text-gray-800">Top 5 Productos con Mayor Stock</h3>
+          </div>
           <div className="h-80" style={{ minHeight: '320px' }}>
             {chartTopProductos.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -202,8 +227,11 @@ export const Dashboard = () => {
         </div>
 
         {/* Stock Distribution Pie Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold mb-6 text-gray-800">Distribución de Stock</h3>
+        <div className="bg-gradient-to-br from-white to-fuchsia-50/30 p-6 rounded-2xl shadow-xl border border-fuchsia-100 hover:shadow-2xl transition-all duration-300">
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-1 h-6 bg-gradient-to-b from-fuchsia-500 to-pink-500 rounded-full" />
+            <h3 className="text-lg font-bold text-gray-800">Distribución de Stock</h3>
+          </div>
           <div className="h-80" style={{ minHeight: '320px' }}>
             {chartDistribucion.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
@@ -237,9 +265,12 @@ export const Dashboard = () => {
       {/* Tables Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Sales */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-800">Ventas Recientes</h3>
+        <div className="bg-gradient-to-br from-white to-pink-50/30 rounded-2xl shadow-xl border border-pink-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+          <div className="p-6 border-b border-pink-100/50 bg-gradient-to-r from-pink-50/50 to-transparent">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-rose-500 rounded-full" />
+              <h3 className="text-lg font-bold text-gray-800">Ventas Recientes</h3>
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-600">
@@ -271,9 +302,12 @@ export const Dashboard = () => {
         </div>
 
         {/* Products about to expire */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-6 border-b border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-800">Sublotes Próximos a Vencer</h3>
+        <div className="bg-gradient-to-br from-white to-orange-50/30 rounded-2xl shadow-xl border border-orange-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+          <div className="p-6 border-b border-orange-100/50 bg-gradient-to-r from-orange-50/50 to-transparent">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
+              <h3 className="text-lg font-bold text-gray-800">Sublotes Próximos a Vencer</h3>
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-gray-600">
@@ -311,12 +345,15 @@ export const Dashboard = () => {
 
       {/* Low Stock Alert */}
       {(estadisticas?.productosBajoStock || 0) > 0 && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg">
-          <div className="flex items-center">
-            <AlertCircle className="text-yellow-600 mr-3" size={24} />
+        <div className="relative bg-gradient-to-r from-pink-50 via-purple-50 to-fuchsia-50 border-l-4 border-purple-500 p-6 rounded-2xl shadow-lg overflow-hidden animate-slideIn">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-200/20 to-transparent rounded-full blur-3xl" />
+          <div className="relative flex items-center gap-4">
+            <div className="p-3 bg-gradient-to-br from-purple-400 to-fuchsia-500 rounded-xl shadow-lg">
+              <AlertCircle className="text-white" size={28} />
+            </div>
             <div>
-              <h3 className="text-yellow-800 font-semibold">Alerta de Stock Bajo</h3>
-              <p className="text-yellow-700 text-sm mt-1">
+              <h3 className="text-purple-900 font-bold text-lg">Alerta de Stock Bajo</h3>
+              <p className="text-purple-800 text-sm mt-1 font-medium">
                 Hay {estadisticas?.productosBajoStock || 0} producto{(estadisticas?.productosBajoStock || 0) !== 1 ? 's' : ''} con stock bajo.
                 Considera realizar un pedido de reposición.
               </p>
